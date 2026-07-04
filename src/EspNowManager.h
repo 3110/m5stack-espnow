@@ -26,7 +26,6 @@ public:
     bool begin(uint8_t ch = ESP_NOW_CHANNEL);
     bool registerPeer(const uint8_t* addr);
     bool unregisterPeer(const uint8_t* addr);
-    bool registerBroadcastPeer(void);
     bool registerCallback(esp_now_recv_cb_t cb);
     bool registerCallback(esp_now_send_cb_t cb);
     bool send(const uint8_t* peerAddr, const uint8_t* data, size_t len);
@@ -35,6 +34,7 @@ public:
 protected:
     bool initEspNow(void);
     void initPeer(const uint8_t* addr, esp_now_peer_info_t& peer);
+    bool registerBroadcastPeer(void);
     bool setWifiChannel(uint8_t ch);
 
 private:
