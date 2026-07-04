@@ -1,40 +1,43 @@
 #pragma once
 
 #include <WiFi.h>
+#include <esp_log.h>
 #include <esp_now.h>
+#include <esp_wifi.h>
 
-#include "Debug.h"
+struct MacAddressStr
+{
+    char str[ESP_NOW_ETH_ALEN * 3];
+};
+
+inline MacAddressStr macToStr(const uint8_t* mac) {
+    MacAddressStr result;
+    snprintf(result.str, sizeof(result.str), "%02x:%02x:%02x:%02x:%02x:%02x",
+             mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    return result;
+}
 
 class EspNowManager {
 public:
-    static const uint8_t BROADCAST_ADDRESS[ESP_NOW_ETH_ALEN];
-    EspNowManager(const uint8_t channel = 0);
-    virtual ~EspNowManager(void);
+    EspNowManager(void);
+    ~EspNowManager(void) = default;
 
-    virtual const uint8_t *const getAddress(void) const;
-    virtual bool begin(void);
-    virtual bool registerPeer(const uint8_t *addr);
-    virtual bool unregisterPeer(const uint8_t *addr);
-    virtual bool registerCallback(esp_now_recv_cb_t cb);
-    virtual bool registerCallback(esp_now_send_cb_t cb);
-    virtual bool send(const uint8_t *peerAddr, const uint8_t *data, size_t len);
+    const uint8_t* getAddress(void) const;
+    bool begin(uint8_t ch = ESP_NOW_CHANNEL);
+    bool registerPeer(const uint8_t* addr);
+    bool unregisterPeer(const uint8_t* addr);
+    bool registerBroadcastPeer(void);
+    bool registerCallback(esp_now_recv_cb_t cb);
+    bool registerCallback(esp_now_send_cb_t cb);
+    bool send(const uint8_t* peerAddr, const uint8_t* data, size_t len);
+    bool broadcast(const uint8_t* data, size_t len);
 
 protected:
-    void initEspNow(void);
-    void initPeer(const uint8_t *addr, esp_now_peer_info_t &peer);
-
-#ifdef ENABLE_SERIAL_MONITOR
-#define PRINT_ESP_ERR(p, e) \
-    SERIAL_PRINT(p);        \
-    printEspErr(e);         \
-    SERIAL_PRINTLN();
-
-    void printEspErr(esp_err_t e);
-#else
-#define PRINT_ESP_ERR(p, e)
-#endif
+    bool initEspNow(void);
+    void initPeer(const uint8_t* addr, esp_now_peer_info_t& peer);
+    bool setWifiChannel(uint8_t ch);
 
 private:
-    const uint8_t CHANNEL;
-    uint8_t ADDRESS[ESP_NOW_ETH_ALEN];
+    uint8_t _channel;
+    uint8_t _address[ESP_NOW_ETH_ALEN];
 };
