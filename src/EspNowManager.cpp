@@ -18,6 +18,7 @@ const uint8_t* EspNowManager::getAddress(void) const {
 }
 
 bool EspNowManager::begin(uint8_t ch) {
+    ESP_LOGI(TAG, "Initializing ESP-NOW Manager %s", VERSION);
     ESP_LOGI(TAG, "STA MAC: %s", macToStr(this->_address).str);
 
     WiFi.mode(WIFI_STA);

@@ -19,6 +19,8 @@ inline MacAddressStr macToStr(const uint8_t* mac) {
 
 class EspNowManager {
 public:
+    static constexpr const char* VERSION = "v0.0.1";
+
     EspNowManager(void);
     ~EspNowManager(void) = default;
 
