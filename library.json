@@ -1,6 +1,6 @@
 {
     "name": "m5stack-espnow",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "ESP-NOW manager library for M5Stack.",
     "keywords": [
         "m5stack",
