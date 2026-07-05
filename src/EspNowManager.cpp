@@ -18,7 +18,7 @@ const uint8_t* EspNowManager::getAddress(void) const {
 }
 
 bool EspNowManager::begin(uint8_t ch) {
-    ESP_LOGD(TAG, "STA MAC: %s", macToStr(this->_address).str);
+    ESP_LOGI(TAG, "STA MAC: %s", macToStr(this->_address).str);
 
     WiFi.mode(WIFI_STA);
     WiFi.disconnect(false, false);
@@ -29,7 +29,7 @@ bool EspNowManager::begin(uint8_t ch) {
         return false;
     }
     this->_channel = ch;
-    ESP_LOGD(TAG, "Wi-Fi channel set to: %u", this->_channel);
+    ESP_LOGI(TAG, "Wi-Fi channel set to: %u", this->_channel);
     return initEspNow();
 }
 
@@ -39,7 +39,7 @@ bool EspNowManager::initEspNow(void) {
         ESP_LOGE(TAG, "ESP-NOW init failed: %s", esp_err_to_name(e));
         return false;
     }
-    ESP_LOGD(TAG, "ESP-NOW initialized");
+    ESP_LOGI(TAG, "ESP-NOW initialized");
     return true;
 }
 
@@ -69,7 +69,7 @@ bool EspNowManager::unregisterPeer(const uint8_t* addr) {
         ESP_LOGE(TAG, "Failed to unregister peer: %s", macToStr(addr).str);
         return false;
     }
-    ESP_LOGD(TAG, "Unregistered peer: %s", macToStr(addr).str);
+    ESP_LOGI(TAG, "Unregistered peer: %s", macToStr(addr).str);
     return e == ESP_OK;
 }
 
@@ -78,7 +78,7 @@ bool EspNowManager::registerBroadcastPeer(void) {
         ESP_LOGE(TAG, "Failed to register broadcast peer");
         return false;
     }
-    ESP_LOGD(TAG, "Registered broadcast peer");
+    ESP_LOGI(TAG, "Registered broadcast peer");
     return true;
 }
 
@@ -89,7 +89,7 @@ bool EspNowManager::registerCallback(esp_now_recv_cb_t cb) {
                  esp_err_to_name(e));
         return false;
     }
-    ESP_LOGD(TAG, "Registered receive callback");
+    ESP_LOGI(TAG, "Registered receive callback");
     return e == ESP_OK;
 }
 
@@ -100,7 +100,7 @@ bool EspNowManager::registerCallback(esp_now_send_cb_t cb) {
                  esp_err_to_name(e));
         return false;
     }
-    ESP_LOGD(TAG, "Registered send callback");
+    ESP_LOGI(TAG, "Registered send callback");
     return e == ESP_OK;
 }
 
@@ -111,7 +111,7 @@ bool EspNowManager::send(const uint8_t* peerAddr, const uint8_t* data,
         ESP_LOGE(TAG, "Failed to send data: %s", esp_err_to_name(e));
         return false;
     }
-    ESP_LOGD(TAG, "Data queued to: %s", macToStr(peerAddr).str);
+    ESP_LOGI(TAG, "Data queued to: %s", macToStr(peerAddr).str);
     ESP_LOG_BUFFER_HEXDUMP(TAG, data, len, ESP_LOG_DEBUG);
     return e == ESP_OK;
 }
@@ -128,7 +128,7 @@ bool EspNowManager::broadcast(const uint8_t* data, size_t len) {
         ESP_LOGE(TAG, "Failed to broadcast data: %s", esp_err_to_name(e));
         return false;
     }
-    ESP_LOGD(TAG, "Broadcast data queued to: %s",
+    ESP_LOGI(TAG, "Broadcast data queued to: %s",
              macToStr(BROADCAST_ADDRESS).str);
     ESP_LOG_BUFFER_HEXDUMP(TAG, data, len, ESP_LOG_DEBUG);
     return e == ESP_OK;
